@@ -10,6 +10,7 @@ export const toUserDto = (user: User): UserDto => {
     bio,
     socialLinks,
     token,
+    isVerified,
   } = user;
 
   return {
@@ -21,5 +22,6 @@ export const toUserDto = (user: User): UserDto => {
     bio,
     socialLinks,
     token,
+    isVerified,
   };
 };

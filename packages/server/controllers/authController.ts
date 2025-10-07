@@ -2,8 +2,9 @@ import { Request, Response } from "express";
 import User from "../models/User";
 import bcrypt from "bcryptjs";
 import generateToken from "../utils/generateToken";
-import { AppError, User as UserType } from "../utils/types";
+import { AppError, User as IUser } from "../utils/types";
 import { toUserDto } from "../dtos/userDto";
+import { generateEmailVerification, sendMail } from "../utils/sendEmail";
 
 const loginUser = async (req: Request, res: Response) => {
   try {
@@ -32,7 +33,7 @@ const loginUser = async (req: Request, res: Response) => {
     res.status(200).json({
       success: true,
       message: "Successfully logged in",
-      data: toUserDto(user as unknown as UserType),
+      data: toUserDto(user as unknown as IUser),
     });
   } catch (error) {
     const err = error as AppError;
@@ -68,6 +69,8 @@ const registerUser = async (req: Request, res: Response) => {
       password: hashedPassword,
     });
 
+    await generateEmailVerification(user);
+
     user.token = generateToken(user._id.toString());
 
     await user.save();
@@ -75,7 +78,7 @@ const registerUser = async (req: Request, res: Response) => {
     res.status(201).json({
       success: true,
       message: "Successfully registered",
-      data: toUserDto(user as unknown as UserType),
+      data: toUserDto(user as unknown as IUser),
     });
   } catch (error) {
     const err = error as AppError;
@@ -89,7 +92,7 @@ const getMe = async (req: Request, res: Response) => {
 
     res
       .status(200)
-      .json({ success: true, data: toUserDto(user as unknown as UserType) });
+      .json({ success: true, data: toUserDto(user as unknown as IUser) });
   } catch (error) {
     const err = error as AppError;
     res

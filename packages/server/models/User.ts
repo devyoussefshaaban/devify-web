@@ -1,8 +1,9 @@
 import { UserRole } from "../utils/types";
+import { User as IUser } from "../utils/types";
 
-import { Schema, model } from "mongoose";
+import { HydratedDocument, Schema, model } from "mongoose";
 
-const userSchema = new Schema({
+const userSchema = new Schema<IUser>({
   username: { type: String, required: true, unique: true },
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
@@ -20,7 +21,16 @@ const userSchema = new Schema({
     linkedin: { type: String },
   },
   token: { type: String },
+  emailVerification: {
+    token: String,
+    expriresIn: Number,
+  },
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
 });
 
-const User = model("User", userSchema);
+export type UserDocument = HydratedDocument<IUser>;
+const User = model<IUser>("User", userSchema);
 export default User;

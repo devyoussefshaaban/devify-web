@@ -1,4 +1,4 @@
-import { Document } from "mongoose";
+import { Document, HydratedDocument } from "mongoose";
 
 declare global {
   namespace Express {
@@ -21,7 +21,7 @@ export interface UserDto {
   username: string;
   email: string;
   role: UserRole;
-  joinedAt: string;
+  joinedAt: Date;
   avatarUrl: string;
   bio: string;
   socialLinks: {
@@ -30,9 +30,14 @@ export interface UserDto {
     linkedin: string;
   };
   token: string;
+  isVerified: boolean;
 }
 
 export interface User extends UserDto {
   _id: any;
   password: string;
+  emailVerification: {
+    token: string;
+    expiresIn: number;
+  };
 }
