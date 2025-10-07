@@ -1,4 +1,12 @@
-import { ObjectId } from "mongoose";
+import { Document } from "mongoose";
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: Document<any, any, any> | null;
+    }
+  }
+}
 
 export interface AppError extends Error {
   statusCode?: number;

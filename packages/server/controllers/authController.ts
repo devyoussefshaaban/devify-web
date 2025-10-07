@@ -83,4 +83,19 @@ const registerUser = async (req: Request, res: Response) => {
   }
 };
 
-export { loginUser, registerUser };
+const getMe = async (req: Request, res: Response) => {
+  try {
+    const { user } = req;
+
+    res
+      .status(200)
+      .json({ success: true, data: toUserDto(user as unknown as UserType) });
+  } catch (error) {
+    const err = error as AppError;
+    res
+      .status(err?.statusCode || 500)
+      .json({ success: false, message: err.message });
+  }
+};
+
+export { loginUser, registerUser, getMe };
